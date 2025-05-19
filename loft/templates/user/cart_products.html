@@ -1,0 +1,101 @@
+    <!-- Updated Template (user/cart.html) -->
+    <div class="small-container cart-page">
+        {% if cart_items %}
+        <div class="cart-table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in cart_items %}
+                    <tr>
+                        <td>
+                            <div class="cart-info">
+                                <div class="cart-img-container">
+                                    <img src="{{i.product.image.url}}" alt="{{i.product.name}}">
+                                </div>
+                                <div class="cart-product-details">
+                                    <p class="product-name">{{i.product.name}}</p>
+                                    <p class="product-name">Size:{{i.product_size.size}}</p>
+                                    <!-- Changed to display offerprice instead of price -->
+                                    <div class="product-price">Price: <i class='bx bx-rupee'></i>{{i.product.offerprice}}</div>
+
+                                    <a href="{% url 'remove_from_cart' i.id %}" class="remove-btn">Remove</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'update_cart_quantity' %}" class="quantity-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{i.id}}">
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity('quantity-{{i.id}}')">-</button>
+                                    <input type="number" id="quantity-{{i.id}}" name="quantity" value="{{i.quantity}}" min="1">
+                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity('quantity-{{i.id}}')">+</button>
+                                    <button  type="submit" class="update-btn">Update</button>
+                                </div>
+                            </form>
+                        </td>
+                        <td class="subtotal"><i class='bx bx-rupee'></i>{{i.total_price|floatformat:2}}</td>
+                    </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Total</td>
+                    <td><i class='bx bx-rupee'></i>{{ total_price|floatformat:2 }}</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <a href="{% url 'checkout_cart' %}">
+                            <button class="desc-btn desc-btn-primary buy-btn">PROCEED TO CHECKOUT</button>
+                        </a>
+                        >
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        {% else %}
+        <div class="empty-cart">
+            <p>Your cart is empty.</p>
+            <a href="{% url 'product' %}" class="desc-btn">Continue Shopping</a>
+        </div>
+        {% endif %}
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function decreaseQuantity(id) {
+            const input = document.getElementById(id);
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        }
+        
+        function increaseQuantity(id) {
+            const input = document.getElementById(id);
+            input.value = parseInt(input.value) + 1;
+        }
+
+
+    </script>

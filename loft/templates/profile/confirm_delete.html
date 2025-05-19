@@ -1,0 +1,31 @@
+<!-- templates/confirm_delete.html -->
+{% extends 'user/blank_layout.html' %}
+
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+<div class="myprofile-container container">
+    <div class="myprofile-row row">
+        <div class="myprofile-delete-col col-md-6 offset-md-3">
+            <div class="myprofile-delete-card card">
+                <div class="myprofile-delete-header card-header bg-danger text-white">
+                    <h3 class="myprofile-delete-title">Delete Address</h3>
+                </div>
+                <div class="myprofile-delete-body card-body">
+                    <p class="myprofile-delete-text">Are you sure you want to delete the address for "{{ address.name }}"?</p>
+                    <p class="myprofile-delete-warning">This action cannot be undone.</p>
+                    
+                    <form method="post" class="myprofile-delete-form">
+                        {% csrf_token %}
+                        <div class="myprofile-delete-buttons form-group">
+                            <button type="submit" class="myprofile-confirm-btn btn btn-danger">Delete</button>
+                            <a href="{% url 'profile' %}" class="myprofile-cancel-btn btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

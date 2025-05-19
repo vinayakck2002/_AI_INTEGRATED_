@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --primary-hover: #0b5ed7;
+            --text-color: #333;
+            --text-secondary: #6c757d;
+            --bg-color: #f8f9fa;
+            --border-color: #dee2e6;
+            --error-bg: #f8d7da;
+            --error-text: #721c24;
+            --success-bg: #d4edda;
+            --success-text: #155724;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 0;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .otp-input-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .otp-input {
+            font-size: 1.5rem;
+            text-align: center;
+            width: 50px;
+            height: 60px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .otp-input:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .hidden-input {
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+        
+        .error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .success {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .resend {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .timer {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .resend-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .resend-link:disabled {
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .resend-link:hover:not(:disabled) {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Verify Your Email</h1>
+            <p>We've sent a 6-digit verification code to <br><strong>{{ request.session.email }}</strong></p>
+        </div>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="POST" id="otpForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="otp">Enter verification code</label>
+                <div class="otp-input-container">
+                    <input type="text" class="otp-input" maxlength="1" autofocus>
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                    <input type="text" class="otp-input" maxlength="1">
+                </div>
+                <input type="hidden" id="otp" name="otp" class="hidden-input">
+            </div>
+            <button type="submit" class="btn" id="verifyBtn" disabled>Verify</button>
+        </form>
+        
+        <div class="resend">
+            <div class="timer" id="timer">Resend code in <span id="countdown">05:00</span></div>
+            <a class="resend-link" id="resendLink" disabled>Resend verification code</a>
+        </div>
+    </div>
+
+    <script>
+        // Handle OTP input
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const hiddenInput = document.getElementById('otp');
+        const verifyBtn = document.getElementById('verifyBtn');
+        
+        // Auto focus next input and validate
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (!/^\d*$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Auto focus next input
+                if (value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                
+                // Update hidden input value
+                updateHiddenInputValue();
+            });
+            
+            // Handle backspace to go back to previous input
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        function updateHiddenInputValue() {
+            let otpValue = '';
+            let isComplete = true;
+            
+            otpInputs.forEach(input => {
+                otpValue += input.value;
+                if (!input.value) {
+                    isComplete = false;
+                }
+            });
+            
+            hiddenInput.value = otpValue;
+            verifyBtn.disabled = !isComplete;
+        }
+        
+        // Countdown timer for resend option
+        const countdownElement = document.getElementById('countdown');
+        const resendLink = document.getElementById('resendLink');
+        const timerElement = document.getElementById('timer');
+        
+        let timeLeft = 300; // 5 minutes in seconds
+        
+        function updateCountdown() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownTimer);
+                timerElement.style.display = 'none';
+                resendLink.removeAttribute('disabled');
+            } else {
+                timeLeft--;
+            }
+        }
+        
+        // Update the countdown every second
+        updateCountdown();
+        const countdownTimer = setInterval(updateCountdown, 1000);
+        
+        // Handle resend link
+        resendLink.addEventListener('click', (e) => {
+            if (resendLink.hasAttribute('disabled')) {
+                return;
+            }
+            
+            // Here you would normally submit the form to resend OTP
+            // For this template, we'll just reload the page
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

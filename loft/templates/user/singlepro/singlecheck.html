@@ -1,0 +1,156 @@
+{% extends 'user/blank_layout.html' %}
+{% block banner %}
+{% endblock banner %}
+{% block content %}
+<div class="checkbuy-container">
+    <div class="checkbuy-header">
+        <h1>Checkout</h1>   
+    </div>
+
+    <div class="checkbuy-content">
+        <div class="checkbuy-main">
+            <div class="checkbuy-section product-section">
+                <h2>Product Details</h2>
+                <div class="checkbuy-product-details">
+                    <div class="checkbuy-product-image">
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                        <span class="checkbuy-product-quantity" id="product-quantity-badge">1</span>
+                    </div>
+                    <div class="checkbuy-product-info">
+                        <h3>{{ product.title }}</h3>
+                        <div class="checkbuy-price-container">
+                            {% if product.discount and product.discount < product.price %}
+                                <div>
+                                    <span class="checkbuy-product-original-price">
+                                        <i class='bx bx-rupee'></i>{{ product.price }}
+                                    </span>
+                                    <span class="checkbuy-product-price">
+                                        <i class='bx bx-rupee'></i>{{ product.discount }}
+                                    </span>
+                                </div>
+                            {% else %}
+                                <div>
+                                    <span class="checkbuy-product-price">
+                                        <i class='bx bx-rupee'></i>{{ product.price }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkbuy-section shipping-section">
+                <h2>Shipping Information</h2>
+
+                <form method="POST" action="{% url 'checkout_buy' product.id %}" class="checkbuy-form">
+                    {% csrf_token %}
+
+                    <div class="checkbuy-form-group">
+                        <label for="size">Select Size:</label>
+                        <select name="selected_size" id="size" required>
+                            {% for size in sizes %}
+                                <option value="{{ size.size }}" data-stock="{{ size.Stock }}">
+                                    {{ size.size }} ({{ size.Stock }} available)
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="selected_quantity" value="1" min="1" required>
+                    </div>
+
+                    <div class="checkbuy-form-group">
+                        <h3>Select Shipping Address</h3>
+                        <div class="checkbuy-address-list">
+                            {% for address in addresses %}
+                            <div class="checkbuy-address-item">
+                                <input type="radio" id="address-{{ address.id }}" name="address_id" value="{{ address.id }}" required {% if forloop.first %}checked{% endif %}>
+                                <label class="checkbuy-address" for="address-{{ address.id }}">
+                                    <strong>{{ address.label }}</strong><br>
+                                    {{ address.name }} <br>
+                                    {{ address.address }}<br>
+                                    {{ address.phone }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="checkbuy-actions">
+                        <a href="{% url 'product_detail' product.id %}" class="back-btn">Back to Product</a>
+                        <button type="submit" class="continue-btn">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="checkbuy-sidebar">
+            <div class="checkbuy-order-summary">
+                <h2>Order Summary</h2>
+                
+                <div class="checkbuy-summary-row">
+                    <span>Product Price</span>
+                    <span><i class='bx bx-rupee'></i><span id="unit-price">{{ product.discount|default:product.price }}</span></span>
+                </div>
+                <div class="checkbuy-summary-row">
+                    <span>Quantity</span>
+                    <span id="summary-quantity">1</span>
+                </div>
+                
+                <div class="checkbuy-summary-divider"></div>
+                
+                <div class="checkbuy-summary-row">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal"><i class='bx bx-rupee'></i>{{ product.discount|default:product.price }}</span>
+                </div>
+                <div class="checkbuy-summary-row">
+                    <span>Shipping</span>
+                    <span id="shipping-cost">Free</span>
+                </div>
+                
+                <div class="checkbuy-summary-divider"></div>
+                
+                <div class="checkbuy-summary-row checkbuy-total-row">
+                    <span>Total</span>
+                    <span class="total-price" id="summary-total"><i class='bx bx-rupee'></i>{{ product.discount|default:product.price }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quantityInput = document.getElementById('quantity');
+    const sizeSelect = document.getElementById('size');
+    const unitPrice = parseFloat(document.getElementById('unit-price').textContent);
+
+    function updateSummary() {
+        const quantity = parseInt(quantityInput.value);
+        const subtotal = unitPrice * quantity;
+
+        document.getElementById('summary-quantity').textContent = quantity;
+        document.getElementById('summary-subtotal').innerHTML = `<i class='bx bx-rupee'></i>${subtotal.toFixed(2)}`;
+        document.getElementById('summary-total').innerHTML = `<i class='bx bx-rupee'></i>${subtotal.toFixed(2)}`;
+        document.getElementById('product-quantity-badge').textContent = quantity;
+    }
+
+    function updateMaxStock() {
+        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+        const maxStock = parseInt(selectedOption.getAttribute('data-stock'));
+        quantityInput.max = maxStock;
+
+        if (parseInt(quantityInput.value) > maxStock) {
+            quantityInput.value = maxStock;
+        }
+        updateSummary();
+    }
+
+    quantityInput.addEventListener('input', updateSummary);
+    sizeSelect.addEventListener('change', updateMaxStock);
+
+    window.addEventListener('load', () => {
+        updateMaxStock();
+    });
+</script>
+{% endblock content %}

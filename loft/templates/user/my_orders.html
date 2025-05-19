@@ -1,0 +1,45 @@
+{% extends 'user/blank_layout.html' %}
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+{% if orders %}
+            <div class="table-responsive myorder">
+                <h2 class="title">MY ORDER</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.provider_order_id|default:order.id }}</td>
+                            <td>{{ order.product.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td><i class='bx bx-rupee'></i>{{ order.amount|floatformat:2 }}</td>
+                            <td>
+                                <span class="badge {% if order.status == 'PENDING' %}bg-warning{% elif order.status == 'SUCCESS' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info myorder">
+                <p>You haven't placed any orders yet.</p>
+                <a href="{% url 'product' %}" class="btn btn-primary mt-3">Shop Now</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

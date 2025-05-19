@@ -1,0 +1,40 @@
+<!-- templates/profile/email_form.html -->
+{% extends 'user/blank_layout.html' %}
+
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+<div class="myprofile-container container">
+    <div class="myprofile-row row">
+        <div class="myprofile-form-col col-md-8 offset-md-2">
+            <div class="myprofile-form-card card">
+                <div class="myprofile-form-header card-header bg-primary text-white">
+                    <h3 class="myprofile-form-title">Edit Email</h3>
+                </div>
+                <div class="myprofile-form-body card-body">
+                    <form method="post" class="myprofile-form">
+                        {% csrf_token %}
+                        
+                        <div class="myprofile-form-group form-group mb-3">
+                            <label for="email" class="myprofile-label">Email:</label>
+                            <input type="email" id="email" name="email" class="myprofile-input form-control {% if errors.email %}is-invalid{% endif %}" 
+                                value="{{ email|default:'' }}">
+                            {% if errors.email %}
+                                <div class="myprofile-error invalid-feedback">
+                                    {{ errors.email }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="myprofile-button-group form-group">
+                            <button type="submit" class="myprofile-save-btn btn btn-success">Save</button>
+                            <a href="{% url 'profile' %}" class="myprofile-cancel-btn btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

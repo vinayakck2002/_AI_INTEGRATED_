@@ -1,0 +1,65 @@
+{% extends 'user/blank_layout.html' %}
+{% load static %}
+
+{% block banner %}
+{% include 'user/product_description_details.html' %}
+{% endblock banner %}
+
+{% block content %}
+{% endblock content %}
+
+{% block descscript %}
+<script>
+    // Image gallery functionality
+    const images = [
+        "{{ product.image.url }}",
+        "{{ product.image1.url }}",
+        "{{ product.image2.url }}",
+        "{{ product.image3.url }}",
+        "{{ product.image4.url }}"
+    ];
+    
+    let currentImageIndex = 0;
+    
+    function changeImage(index) {
+        currentImageIndex = index;
+        updateImageDisplay();
+    }
+    
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        updateImageDisplay();
+    }
+    
+    function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        updateImageDisplay();
+    }
+    
+    function updateImageDisplay() {
+        // Update main image
+        document.getElementById('main-image').src = images[currentImageIndex];
+        
+        // Update active indicator dot
+        const dots = document.querySelectorAll('.desc-slider-dot');
+        dots.forEach((dot, index) => {
+            if (index === currentImageIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+        
+        // Update active thumbnail
+        const thumbnails = document.querySelectorAll('.desc-thumbnail');
+        thumbnails.forEach((thumbnail, index) => {
+            if (index === currentImageIndex) {
+                thumbnail.classList.add('active');
+            } else {
+                thumbnail.classList.remove('active');
+            }
+        });
+    }
+    
+</script>
+{% endblock descscript %}

@@ -1,0 +1,410 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8b4513;
+            --accent-color: #ba5a6a;
+        }
+        
+        .navbar .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .navbar .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #734010;
+            border-color: #734010;
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #a24d5a;
+            border-color: #a24d5a;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+        }
+        
+        .page-header {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-gem me-2 text-danger"></i>
+                <span class="fs-4" style="color: #8b4513;">L O F T</span>
+            </a>
+            
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'admin_view' %}">
+                            <i class="fa fa-home me-2"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center active" href="{% url 'add_product' %}">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            <span>Add Product</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'view_bookings' %}">
+                            <i class="fas fa-book me-2"></i>
+                            <span>View Bookings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Messages display area -->
+                {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Category Management Card -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Category Management</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add Category Form -->
+                        <form method="post" action="{% url 'add_product' %}" class="mb-4">
+                            {% csrf_token %}
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <label for="new_category_name" class="form-label">Create New Category</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Enter new category name" required>
+                                        <button class="btn btn-primary" type="submit" name="add_category" value="true">Add Category</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <!-- Category List with Delete Option -->
+                        <h5 class="mb-3">Existing Categories</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Category Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for category in categories %}
+                                    <tr>
+                                        <td>{{ category.id }}</td>
+                                        <td>{{ category.name }}</td>
+                                        <td>
+                                            <form method="post" action="{% url 'delete_category' category.id %}" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="category_id" value="{{ category.id }}">
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category? This cannot be undone.')">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center">No categories found. Add one above.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Add Product Card -->
+<!-- Add Product Card -->
+<!-- Add Product Card -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Add Product</h4>
+    </div>
+    <div class="card-body">
+        <!-- Main product form -->
+        <form id="add_product_form" method="post" enctype="multipart/form-data" action="{% url 'add_product' %}">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="product_name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="product_name" name="product_name" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="price" class="form-label">Price (₹) <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="offer_price" class="form-label">Offer Price (₹)</label>
+                    <input type="number" class="form-control" id="offer_price" name="offer_price" min="0" step="0.01">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="color" class="form-label">Color <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="color" name="color" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="shoe_category" class="form-label">Shoe Category <span class="text-danger">*</span></label>
+                    <select class="form-select" id="shoe_category" name="shoe_category" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+                    <select class="form-select" id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        {% for gender in genders %}
+                            <option value="{{ gender.id }}">{{ gender.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Size and Stock Section -->
+            <div class="mb-4">
+                <label class="form-label">Sizes and Stock <span class="text-danger">*</span></label>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            {% for size in available_sizes %}
+                            <div class="col-md-2 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input size-checkbox" type="checkbox" id="size_{{ size }}" name="size[]" value="{{ size }}">
+                                    <label class="form-check-label" for="size_{{ size }}">Size {{ size }}</label>
+                                </div>
+                                <div class="mt-2 size-stock-input" id="stock_input_{{ size }}" style="display: none;">
+                                    <label for="stock_{{ size }}" class="form-label small">Stock:</label>
+                                    <input type="number" class="form-control form-control-sm" id="stock_{{ size }}" name="size_stock[]" min="0" value="0">
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Product Images <span class="text-danger">*</span> (Upload up to 6 images)</label>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image1" name="image1" accept="image/*" required>
+                                <small class="text-muted">Main Image (Required)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image2" name="image2" accept="image/*">
+                                <small class="text-muted">Image 2 (Optional)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image3" name="image3" accept="image/*">
+                                <small class="text-muted">Image 3 (Optional)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image4" name="image4" accept="image/*">
+                                <small class="text-muted">Image 4 (Optional)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image5" name="image5" accept="image/*">
+                                <small class="text-muted">Image 5 (Optional)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body p-2 text-center">
+                                <input type="file" class="form-control" id="image6" name="image6" accept="image/*">
+                                <small class="text-muted">Image 6 (Optional)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="priority" class="form-label">Priority (Lower number = higher priority)</label>
+                <input type="number" class="form-control" id="priority" name="priority" min="0" value="0">
+            </div>
+            <button type="submit" class="btn btn-success">Add Product</button>
+            <a href="#" class="btn btn-secondary">Cancel</a>
+
+        </form>
+    </div>
+</div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+// Show/hide stock inputs based on size checkbox selection
+document.addEventListener('DOMContentLoaded', function() {
+    const sizeCheckboxes = document.querySelectorAll('.size-checkbox');
+    
+    sizeCheckboxes.forEach(function(checkbox) {
+        // Initialize on page load
+        const sizeId = checkbox.id.replace('size_', '');
+        const stockInput = document.getElementById('stock_input_' + sizeId);
+        stockInput.style.display = checkbox.checked ? 'block' : 'none';
+        
+        // Add change event listener
+        checkbox.addEventListener('change', function() {
+            const sizeId = this.id.replace('size_', '');
+            const stockInput = document.getElementById('stock_input_' + sizeId);
+            stockInput.style.display = this.checked ? 'block' : 'none';
+            
+            // Reset stock value when unchecked
+            if (!this.checked) {
+                document.getElementById('stock_' + sizeId).value = 0;
+            }
+        });
+    });
+});
+
+// Form validation
+document.getElementById('add_product_form').addEventListener('submit', function(event) {
+    // Check if at least one size is selected
+    let sizeCheckboxes = document.querySelectorAll('input[name="size[]"]:checked');
+    if (sizeCheckboxes.length === 0) {
+        alert('Please select at least one size option.');
+        event.preventDefault();
+        return false;
+    }
+    
+    // Validate offer price is less than regular price
+    let price = parseFloat(document.getElementById('price').value);
+    let offerPrice = parseFloat(document.getElementById('offer_price').value);
+    
+    if (offerPrice && offerPrice >= price) {
+        alert('Offer price should be less than regular price.');
+        event.preventDefault();
+        return false;
+    }
+    
+    // Validate that selected sizes have stock values
+    let hasStockError = false;
+    sizeCheckboxes.forEach(function(checkbox) {
+        const sizeId = checkbox.id.replace('size_', '');
+        const stockValue = parseInt(document.getElementById('stock_' + sizeId).value);
+        
+        if (isNaN(stockValue) || stockValue < 0) {
+            hasStockError = true;
+        }
+    });
+    
+    if (hasStockError) {
+        alert('Please ensure all selected sizes have valid stock values (0 or greater).');
+        event.preventDefault();
+        return false;
+    }
+});    </script>
+</body>
+</html>

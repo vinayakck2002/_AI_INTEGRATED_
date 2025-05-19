@@ -1,0 +1,135 @@
+{% load static %}
+<!-- Feadtued Categories -->
+
+<div class="categories">
+    <div class="small-container categories-container">
+        <div class="row">
+            <div class="col-md-4 d-none d-md-block">
+                <img src="{% static 'image/pexels-ozgomz-1755386.jpg' %}" class="img-fluid" alt="Image 1">
+            </div>
+            <div class="col-md-4 d-none d-md-block">
+                <img src="{% static 'image/pexels-margarita-141441249-16008684.jpg' %}" class="img-fluid" alt="Image 2">
+            </div>
+            <div class="col-md-4 d-none d-md-block">
+                <img src="{% static 'image/pexels-bananaaa36-15300927.jpg' %}" class="img-fluid" alt="Image 3">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<main class="reccomend-container">
+    <!-- Features Section -->
+    <section class="reccomend-features">
+        <div class="reccomend-features-container">
+            <div class="reccomend-feature-item">
+                <div class="reccomend-feature-icon reccomend-icon-delivery"></div>
+                <h3 class="reccomend-feature-title">Free Delivery</h3>
+                <p class="reccomend-feature-text">Free Shipping on all order</p>
+            </div>
+            <div class="reccomend-feature-item">
+                <div class="reccomend-feature-icon reccomend-icon-return"></div>
+                <h3 class="reccomend-feature-title">Return Policy</h3>
+                <p class="reccomend-feature-text">Free Shipping on all order</p>
+            </div>
+            <div class="reccomend-feature-item">
+                <div class="reccomend-feature-icon reccomend-icon-support"></div>
+                <h3 class="reccomend-feature-title">24/7 Support</h3>
+                <p class="reccomend-feature-text">Free Shipping on all order</p>
+            </div>
+            <div class="reccomend-feature-item">
+                <div class="reccomend-feature-icon reccomend-icon-payment"></div>
+                <h3 class="reccomend-feature-title">Secure Payment</h3>
+                <p class="reccomend-feature-text">Free Shipping on all order</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% if user.is_authenticated %}
+<div class="recommend-product-container">
+    <div class="recommend-product-header">
+        <h2>Recommended Products</h2>
+        <p>Exclusive footwear crafted for unparalleled style and comfort</p>
+    </div>
+
+<div class="recommend-product-grid">
+    {% for item in price %}
+    <div class="recommend-product-item">
+        <div class="recommend-product-img">
+            <a href="{% url 'product_detail' item.product.id %}">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                <div class="recommend-product-overlay">
+                    <div class="recommend-product-overlay-title">{{ item.product.name }}</div>
+                    <div class="recommend-product-overlay-category">{{ item.product.shoe_category }}</div>
+                </div>
+            </a>
+            <div class="recommend-product-price">
+                <div class="recommend-product-current">${{ item.product.offerprice|floatformat:2 }}</div>
+                <div class="recommend-product-original">${{ item.product.price|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-recommendations">
+        <p>No recommended products available. <a href="{% url 'product' %}">Browse all products</a></p>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+
+<!-- Featured Products -->
+
+<div class="container featured-container">
+    <h2 class="title">Featured Products</h2>
+    <div class="row">
+        {% for product in featured %}
+        <div class="col-md-3 col-sm-6 product-item">
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" class="img-fluid product-image" alt="{{ product.title }}">
+                </a>
+                <h6 class="mt-3">{{ product.name }}</h6>
+                <!-- <div class="rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                </div> -->
+                <p><i class='bx bx-rupee'></i>{{ product.offerprice }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+<div class="container latest-container">
+    <h2 class="title">Latest Products</h2>
+    <div class="row">
+        {% for product in latest %}
+        <!-- Using Bootstrap's standard classes with a custom media query for the specific breakpoint -->
+        <div class="col-md-3 col-sm-6 product-item">
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" class="img-fluid product-image" alt="{{ product.title }}">
+                </a>
+                <h6 class="mt-3">{{ product.name }}</h6>
+                <!-- <div class="rating">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-o"></i>
+                </div> -->
+                <p><i class='bx bx-rupee'></i>{{ product.offerprice }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

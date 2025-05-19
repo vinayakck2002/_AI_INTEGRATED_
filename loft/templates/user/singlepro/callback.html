@@ -1,0 +1,32 @@
+{% extends 'user/blank_layout.html' %}
+
+{% block banner %}
+{% endblock banner %}
+{% block content %}
+<div class="container singlepro-container">
+    {% if payment_status == 'success' %}
+        <h1 class="success">Payment Successful!</h1>
+        <p>Your payment has been processed successfully.</p>
+    {% elif payment_status == 'failure' %}
+        <h1 class="failure">Payment Failed</h1>
+        <p>We couldn't process your payment. Please try again later.</p>
+    {% else %}
+        <h1 class="pending">Payment Processing</h1>
+        <p>Your payment is being processed. We'll update you shortly.</p>
+    {% endif %}
+
+    {% if payment_details %}
+    <div class="details">
+        <h2>Payment Details</h2>
+        <p><strong>Order ID:</strong> {{ payment_details.order_id }}</p>
+        <p><strong>Amount:</strong> {{ payment_details.amount }}</p>
+        <p><strong>Date:</strong> {{ payment_details.date }}</p>
+        {% if payment_details.transaction_id %}
+        <p><strong>Transaction ID:</strong> {{ payment_details.transaction_id }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <a href="{% url 'user' %}" class="button">Return to Dashboard</a>
+</div>
+{% endblock %}

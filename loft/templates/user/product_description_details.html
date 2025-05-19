@@ -1,0 +1,401 @@
+ <div class="product-container-main">
+        <!-- Product Details Section -->
+        <div class="product-container">
+            <!-- Product Image Gallery -->
+            <div class="product-image-container">
+                <div class="product-image-main">
+                    <img id="product-main-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+
+                    <div class="product-image-nav product-image-nav-prev" onclick="productPrevImage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="product-image-nav product-image-nav-next" onclick="productNextImage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="product-slider-controls">
+                        <div class="product-slider-dot product-active" onclick="productChangeImage(0)"></div>
+                        <div class="product-slider-dot" onclick="productChangeImage(1)"></div>
+                        <div class="product-slider-dot" onclick="productChangeImage(2)"></div>
+                        <div class="product-slider-dot" onclick="productChangeImage(3)"></div>
+                        <div class="product-slider-dot" onclick="productChangeImage(4)"></div>
+                    </div>
+                </div>
+
+                <div class="product-thumbnails">
+                    <div class="product-thumbnail product-active" onclick="productChangeImage(0)">
+                        <img src="{{ product.image.url }}" alt="Product thumbnail 1">
+                    </div>
+                    <div class="product-thumbnail" onclick="productChangeImage(1)">
+                        <img src="{{ product.image1.url }}" alt="Product thumbnail 2">
+                    </div>
+                    <div class="product-thumbnail" onclick="productChangeImage(2)">
+                        <img src="{{ product.image2.url }}" alt="Product thumbnail 3">
+                    </div>
+                    <div class="product-thumbnail" onclick="productChangeImage(3)">
+                        <img src="{{ product.image3.url }}" alt="Product thumbnail 4">
+                    </div>
+                    <div class="product-thumbnail" onclick="productChangeImage(4)">
+                        <img src="{{ product.image4.url }}" alt="Product thumbnail 5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Information -->
+            <div class="product-info">
+                <form id="product-form" method="POST" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    <div class="product-price"><i class='bx bx-rupee'></i>{{ product.offerprice }}</div>
+
+                    <div class="product-meta">
+                        <div class="product-meta-item">
+                            <span class="product-meta-label">Category</span>
+                            <span class="product-meta-value">{{ product.shoe_category }}</span>
+                        </div>
+                        
+                        <div class="product-meta-item">
+                            <span class="product-meta-label">Description</span>
+                            <span class="product-meta-value">{{ product.description }}</span>
+                        </div>
+                    </div>
+
+                    <input type="hidden" value="{{ product.id }}" name="product_id">
+
+                    {% if sizes %}
+                    <div class="product-size-selector">
+                        <label class="product-meta-label" for="product-size-dropdown">Select Size</label>
+                        <select class="product-select-size" name="selected_size" id="product-size-dropdown" required>
+                            <option value="" disabled selected>size</option>
+                            {% for size in sizes %}
+                            {% if size.Stock > 0 %}
+                            <option value="{{ size.size }}">
+                                {{ size.size }}
+                            </option>
+                            {% else %}
+                            <option value="{{ size.size }}" disabled>
+                                {{ size.size }} (Out of stock)
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="product-actions">
+                        <div class="product-quantity-selector">
+                            <span class="product-quantity-label">Quantity:</span>
+                            <div class="product-quantity-controls">
+                                <input type="number" class="product-quantity-input" name="quantity" id="product-quantity" value="1" min="1">
+                            </div>
+                        </div>
+
+                        <div class="product-button-group">
+                            <button type="submit" formaction="{% url 'buy_now_payment' %}" class="product-btn product-btn-primary">BUY NOW</button>
+
+                            {% if not in_stock %}
+                            <p class="product-text-danger">Out of Stock</p>
+                            {% else %}
+                            {% if product.id in cart_product_ids %}
+                            <a href="{% url 'cart' %}" class="product-btn product-btn-primary">GO TO CART</a>
+                            {% else %}
+                            <button type="submit" class="product-btn product-btn-primary">ADD TO CART</button>
+                            {% endif %}
+                            {% endif %}
+
+                            {% if product.id in wishlist_product_ids %}
+                            <a href="{% url 'remove_from_wishlist' product.id %}" class="product-btn product-btn-icon product-wishlist-btn product-in-wishlist">❤️</a>
+                            {% else %}
+                            <a href="{% url 'add_to_wishlist' product.id %}" class="product-btn product-btn-icon product-wishlist-btn">🤍</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="product-reviews-container">
+            <h2 class="product-section-title">Reviews & Ratings</h2>
+            
+            <!-- Display Current Rating -->
+            <div class="product-rating-box">
+                <div class="product-rating-summary">
+                    <div class="product-rating-average">
+                        <span class="product-rating-number">{{ product.rating }}</span>
+                        <div class="product-rating-stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.rating|floatformat:"0" %}
+                                    <span class="product-star product-filled">★</span>
+                                {% else %}
+                                    <span class="product-star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="product-rating-count">Based on {{ reviews.count }} reviews</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Review Form -->
+            {% if request.session.user %}
+            <div class="product-add-review">
+                <h3>Write a Review</h3>
+                <form method="POST" action="{% url 'addReview' product.id %}">
+                    {% csrf_token %}
+                    <div class="product-rating-input">
+                        <label for="product-rating">Your Rating:</label>
+                        <div class="product-star-rating">
+                            <select name="rating" id="product-rating" required>
+                                <option value="" disabled selected>Select your rating</option>
+                                <option value="5">★★★★★ (5 stars)</option>
+                                <option value="4">★★★★☆ (4 stars)</option>
+                                <option value="3">★★★☆☆ (3 stars)</option>
+                                <option value="2">★★☆☆☆ (2 stars)</option>
+                                <option value="1">★☆☆☆☆ (1 star)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-review-input">
+                        <label for="product-description">Your Review:</label>
+                        <textarea id="product-description" name="description" rows="4" required placeholder="Share your experience with this product..."></textarea>
+                    </div>
+                    <button type="submit" class="product-review-btn product-review-btn-primary">Submit Review</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="product-login-prompt">
+                <p>Please <a href="{% url 'login' %}">login</a> to leave a review.</p>
+            </div>
+            {% endif %}
+            
+            <!-- Display Reviews -->
+            <div class="product-review-list">
+                <h3>Customer Reviews</h3>
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="product-review-item">
+                        <div class="product-review-header">
+                            <div class="product-reviewer-name">{{ review.uname.name.username }}</div>
+                            <div class="product-review-rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <span class="product-star product-filled">★</span>
+                                    {% else %}
+                                        <span class="product-star">☆</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="product-review-content">
+                            {{ review.description }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="product-no-reviews">
+                        <p>No reviews yet. Be the first to review this product!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image Gallery Functionality
+        let productCurrentImageIndex = 0;
+        const productTotalImages = 5;
+        const productImages = [
+            "{{ product.image.url }}",
+            "{{ product.image1.url }}",
+            "{{ product.image2.url }}",
+            "{{ product.image3.url }}",
+            "{{ product.image4.url }}"
+        ];
+
+        function productChangeImage(index) {
+            // Update current index
+            productCurrentImageIndex = index;
+            
+            // Update main image
+            document.getElementById('product-main-image').src = productImages[index];
+            
+            // Update active thumbnail
+            const productThumbnails = document.querySelectorAll('.product-thumbnail');
+            productThumbnails.forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('product-active');
+                } else {
+                    thumb.classList.remove('product-active');
+                }
+            });
+            
+            // Update slider dots
+            const productDots = document.querySelectorAll('.product-slider-dot');
+            productDots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('product-active');
+                } else {
+                    dot.classList.remove('product-active');
+                }
+            });
+        }
+
+        function productNextImage() {
+            let nextIndex = productCurrentImageIndex + 1;
+            if (nextIndex >= productTotalImages) {
+                nextIndex = 0;
+            }
+            productChangeImage(nextIndex);
+        }
+
+        function productPrevImage() {
+            let prevIndex = productCurrentImageIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = productTotalImages - 1;
+            }
+            productChangeImage(prevIndex);
+        }
+    </script>
+
+<!-- <div class="desc-container">
+
+    <div class="desc-product-container">
+        <div class="desc-product-image-container">
+            <div class="desc-product-image-main">
+                <img id="main-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+
+                <div class="desc-image-nav desc-image-nav-prev" onclick="prevImage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </div>
+                <div class="desc-image-nav desc-image-nav-next" onclick="nextImage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+
+                <div class="desc-slider-controls">
+                    <div class="desc-slider-dot active" onclick="changeImage(0)"></div>
+                    <div class="desc-slider-dot" onclick="changeImage(1)"></div>
+                    <div class="desc-slider-dot" onclick="changeImage(2)"></div>
+                    <div class="desc-slider-dot" onclick="changeImage(3)"></div>
+                    <div class="desc-slider-dot" onclick="changeImage(4)"></div>
+                </div>
+            </div>
+
+            <div class="desc-product-thumbnails">
+                <div class="desc-thumbnail active" onclick="changeImage(0)">
+                    <img src="{{ product.image.url }}" alt="Product thumbnail 1">
+                </div>
+                <div class="desc-thumbnail" onclick="changeImage(1)">
+                    <img src="{{ product.image1.url }}" alt="Product thumbnail 2">
+                </div>
+                <div class="desc-thumbnail" onclick="changeImage(2)">
+                    <img src="{{ product.image2.url }}" alt="Product thumbnail 3">
+                </div>
+                <div class="desc-thumbnail" onclick="changeImage(3)">
+                    <img src="{{ product.image3.url }}" alt="Product thumbnail 4">
+                </div>
+                <div class="desc-thumbnail" onclick="changeImage(4)">
+                    <img src="{{ product.image4.url }}" alt="Product thumbnail 5">
+                </div>
+            </div>
+        </div>
+
+
+
+        
+        <form id="productForm" method="POST" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <div class="desc-product-info">
+                <h1 class="desc-product-title">{{ product.name }}</h1>
+                <div class="desc-product-price"><i class='bx bx-rupee'></i>{{ product.offerprice }}</div>
+
+                <div class="desc-product-meta">
+                    <div class="desc-meta-item">
+                        <span class="desc-meta-label">Category</span>
+                        <span class="desc-meta-value"> {{ product.shoe_category }}</span>
+                    </div>
+                </div>
+                <div class="desc-product-meta">
+                    <div class="desc-meta-item">
+                        <span class="desc-meta-label">Description</span>
+                        <span class="desc-meta-value"> {{ product.description }}</span>
+                    </div>
+                </div>
+
+                <input type="hidden" value="{{ product.id }}" name="product_id">
+
+                {% if sizes %}
+                <div class="desc-size-selector">
+                    <label class="desc-meta-label" for="size-dropdown">Select Size</label>
+                    <select class="desc-meta-value select-size" name="selected_size" id="size-dropdown" required>
+                        <option value="" disabled selected>size</option>
+                        {% for size in sizes %}
+                        {% if size.Stock > 0 %}
+                        <option value="{{ size.size }}">
+                            {{ size.size }}
+                        </option>
+                        {% else %}
+                        <option value="{{ size.size }}" disabled>
+                            {{ size.size }} (Out of stock)
+                        </option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+
+                <div class="desc-product-actions">
+                    <div class="desc-quantity-selector">
+                        <span class="desc-quantity-label">Quantity:</span>
+                        <div class="desc-quantity-controls">
+                            <input type="number" class="desc-quantity-input" name="quantity" id="quantity" value="1"
+                                min="1">
+                        </div>
+                    </div>
+
+                    <div class="desc-button-group">
+                        <button type="submit" formaction="{% url 'buy_now_payment' %}"
+                            class="desc-btn desc-btn-primary">BUY</button>
+
+                        {% if not in_stock %}
+                        <p class="text-danger">Out of Stock</p>
+                        {% else %}
+                        {% if product.id in cart_product_ids %}
+                        <a href="{% url 'cart' %}">
+                            <button type="button" class="desc-btn desc-btn-primary">GO TO CART</button>
+                        </a>
+                        {% else %}
+                        <button type="submit" class="desc-btn desc-btn-primary">ADD TO CART</button>
+                        {% endif %}
+                        {% endif %}
+
+                        {% if product.id in wishlist_product_ids %}
+                        <a href="{% url 'remove_from_wishlist' product.id %}"
+                            class="desc-btn desc-btn-icon wishlist-btn in-wishlist">❤️</a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' product.id %}"
+                            class="desc-btn desc-btn-icon wishlist-btn">🤍</a>
+                        {% endif %}
+                    </div>
+                </div>
+        </form>
+
+
+
+
+
+
+    </div>
+</div> -->

@@ -1,0 +1,886 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Cosmo Chic</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styling */
+        :root {
+            --primary-color: #8b4513;
+            --accent-color: #ba5a6a;
+        }
+        
+        .navbar .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .navbar .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #734010;
+            border-color: #734010;
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #a24d5a;
+            border-color: #a24d5a;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+        }
+        
+        .page-header {
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+/* add product start*/
+.front-admin-sidebar {
+    min-height: 100vh;
+    background-color: #343a40;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+.front-admin-main-content {
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+/* Sidebar Styles */
+.front-admin-navbar-brand {
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.front-admin-nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin: 2px 0;
+    transition: all 0.2s;
+}
+
+.front-admin-nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+}
+
+.front-admin-nav-link.active {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 3px solid #007bff;
+}
+
+.front-admin-nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Profile Section */
+.front-admin-navbar-profile {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.front-admin-navbar-profile img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Top Navigation */
+.front-admin-navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.front-admin-navbar .front-admin-input-group {
+    width: 250px;
+}
+
+.front-admin-navbar .form-control {
+    border-right: none;
+}
+
+.front-admin-navbar .btn-outline-secondary {
+    border-color: #ced4da;
+    color: #6c757d;
+    border-left: none;
+    background-color: white;
+}
+
+.front-admin-navbar .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+/* ================================================ */
+
+
+            
+.card-container {
+display: grid;
+grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+gap: 20px; /* Space between cards */
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+}
+
+/* Make the grid responsive */
+@media (max-width: 992px) {
+.card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+}
+}
+
+@media (max-width: 576px) {
+.card-container {
+    grid-template-columns: 1fr; /* 1 column on small screens */
+}
+}
+
+/* Product card styling */
+.card-product {
+background-color: white;
+border-radius: 8px;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+display: flex;
+flex-direction: column;
+margin-bottom: 20px;
+}
+
+.card-image-main {
+height: 200px;
+overflow: hidden;
+}
+
+.card-image-main img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.card-info {
+padding: 16px;
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+}
+
+.card-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.card-name {
+font-size: 1.4rem;
+font-weight: bold;
+color: #333;
+}
+
+.card-price {
+font-size: 1.2rem;
+font-weight: bold;
+color: #2ecc71;
+}
+
+.card-category {
+display: inline-block;
+background-color: #f1f1f1;
+border-radius: 20px;
+padding: 4px 12px;
+font-size: 0.8rem;
+font-weight: bold;
+color: #555;
+margin-bottom: 12px;
+}
+
+.card-description {
+color: #666;
+line-height: 1.4;
+margin-bottom: 16px;
+}
+
+.card-images-small {
+display: flex;
+gap: 8px;
+margin-bottom: 16px;
+overflow-x: auto;
+}
+
+.card-image-small {
+width: 60px;
+height: 60px;
+flex-shrink: 0;
+}
+
+.card-image-small img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+border-radius: 4px;
+}
+
+.card-actions {
+display: flex;
+justify-content: flex-end;
+gap: 8px;
+margin-top: auto; /* Push buttons to bottom */
+}
+
+.card-btn-edit, .card-btn-delete {
+padding: 8px 16px;
+border: none;
+border-radius: 4px;
+color: white;
+font-weight: bold;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 4px;
+text-decoration: none;
+}
+
+.card-btn-edit {
+background-color: #3498db;
+}
+
+.card-btn-delete {
+background-color: #e74c3c;
+}
+
+.card-btn-icon {
+width: 16px;
+height: 16px;
+display: inline-block;
+}
+
+/* ============================================================= */
+
+.view-booking-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Title styles */
+.view-booking-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
+  position: relative;
+}
+
+.view-booking-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 60px;
+  height: 2px;
+  background-color: #4f46e5;
+}
+
+/* Filters section */
+.view-booking-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
+}
+
+.view-booking-filter, 
+.view-booking-sort {
+  min-width: 200px;
+}
+
+.view-booking-filter label,
+.view-booking-sort label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.view-booking-select {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #1e293b;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
+.view-booking-select:hover {
+  border-color: #818cf8;
+}
+
+.view-booking-select:focus {
+  border-color: #4f46e5;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Table styles */
+.view-booking-table-wrapper {
+  border-radius: 0.375rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+}
+
+.view-booking-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.view-booking-th {
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.view-booking-th:first-child {
+  padding-left: 1.5rem;
+}
+
+.view-booking-td {
+  padding: 1rem;
+  vertical-align: middle;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.view-booking-td:first-child {
+  padding-left: 1.5rem;
+  font-weight: 600;
+}
+
+.view-booking-row {
+  transition: all 0.2s ease-in-out;
+}
+
+.view-booking-row:hover {
+  background-color: #f8fafc;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
+.view-booking-row:last-child .view-booking-td {
+  border-bottom: none;
+}
+
+/* Empty state */
+.view-booking-empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  background-color: #f8fafc;
+}
+
+/* Status indicators */
+.view-booking-table td:nth-child(4) {
+  position: relative;
+}
+
+/* Product Details Column Styles */
+.product-details {
+  flex: 1;
+}
+
+.product-details h4 {
+  color: #1e293b;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.product-details p {
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.product-details span {
+  display: inline-block;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+/* Product Image Styles */
+.view-booking-td img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.view-booking-td img:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.view-booking-td .w-16 {
+  width: 4rem;
+  min-width: 4rem;
+}
+
+.view-booking-td .h-16 {
+  height: 4rem;
+}
+
+.view-booking-td .bg-gray-200 {
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  border: 1px solid #cbd5e1;
+}
+
+.view-booking-td .text-xs {
+  font-size: 0.75rem;
+}
+
+.view-booking-td .text-gray-500 {
+  color: #64748b;
+}
+
+.view-booking-td .text-gray-600 {
+  color: #475569;
+}
+
+/* Apply these conditionally in your template */
+.status-paid {
+  color: #10b981;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 9999px;
+}
+
+.status-pending {
+  color: #f59e0b;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(245, 158, 11, 0.1);
+  border-radius: 9999px;
+}
+
+.status-failed {
+  color: #ef4444;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: 9999px;
+}
+
+.status-refunded {
+  color: #64748b;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(100, 116, 139, 0.1);
+  border-radius: 9999px;
+}
+
+/* Pagination styles */
+.view-booking-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+.view-booking-pagination-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-booking-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  background-color: white;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-booking-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.view-booking-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Active/Primary button */
+.view-booking-btn-primary {
+  background-color: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+.view-booking-btn-primary:hover {
+  background-color: #3730a3;
+  border-color: #3730a3;
+  color: white;
+}
+
+/* Product column specific responsive styles */
+.view-booking-td .flex {
+  display: flex;
+}
+
+.view-booking-td .items-center {
+  align-items: center;
+}
+
+.view-booking-td .mr-4 {
+  margin-right: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .view-booking-container {
+    padding: 1rem;
+  }
+  
+  .view-booking-filters {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .view-booking-filter, 
+  .view-booking-sort {
+    width: 100%;
+  }
+  
+  .view-booking-th, 
+  .view-booking-td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .view-booking-th:first-child,
+  .view-booking-td:first-child {
+    padding-left: 0.75rem;
+  }
+  
+  .view-booking-pagination {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  /* Responsive adjustments for product details column */
+  .view-booking-td .flex {
+    flex-direction: column;
+  }
+  
+  .view-booking-td .mr-4 {
+    margin-right: 0;
+    margin-bottom: 0.75rem;
+  }
+  
+  .view-booking-td .w-16 {
+    width: 100%;
+    height: auto;
+    max-width: 120px;
+    margin: 0 auto;
+  }
+  
+  .view-booking-td .h-16 {
+    height: auto;
+    aspect-ratio: 1/1;
+  }
+  
+  .product-details {
+    text-align: center;
+  }
+}
+
+            
+
+
+
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-gem me-2 text-danger"></i>
+                <span class="fs-4" style="color: #8b4513;">L O F T</span>
+            </a>
+            
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation links -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'admin_view' %}">
+                            <i class="fa fa-home me-2"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center active" href="{% url 'add_product' %}">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            <span>Add Product</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="#">
+                            <i class="fas fa-list me-2"></i>
+                            <span>Category</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'view_bookings' %}">
+                            <i class="fas fa-book me-2"></i>
+                            <span>View Bookings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 d-flex align-items-center" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="view-booking-container max-w-6xl mx-auto px-4 py-6 ms-auto">
+      <h2 class="view-booking-title text-2xl font-bold mb-6">Order Bookings</h2>
+  
+      <form method="get" class="view-booking-filters flex flex-wrap gap-4 mb-6">
+          <div class="view-booking-filter">
+              <label class="block text-sm font-semibold mb-1">Filter by Status</label>
+              <select name="status" onchange="this.form.submit()" class="view-booking-select border px-3 py-2 rounded">
+                  <option value="">All</option>
+                  {% for status in payment_statuses %}
+                      <option value="{{ status }}" {% if current_status == status %}selected{% endif %}>{{ status }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+  
+          <div class="view-booking-sort">
+              <label class="block text-sm font-semibold mb-1">Sort by</label>
+              <select name="sort" onchange="this.form.submit()" class="view-booking-select border px-3 py-2 rounded">
+                  <option value="-created_at" {% if current_sort == "-created_at" %}selected{% endif %}>Newest</option>
+                  <option value="created_at" {% if current_sort == "created_at" %}selected{% endif %}>Oldest</option>
+                  <option value="-amount" {% if current_sort == "-amount" %}selected{% endif %}>Amount (High to Low)</option>
+                  <option value="amount" {% if current_sort == "amount" %}selected{% endif %}>Amount (Low to High)</option>
+                  <option value="status" {% if current_sort == "status" %}selected{% endif %}>Status</option>
+              </select>
+          </div>
+      </form>
+  
+      <div class="view-booking-table-wrapper overflow-x-auto">
+          <table class="view-booking-table w-full border-collapse text-sm">
+              <thead class="bg-gray-100">
+                  <tr>
+                      <th class="view-booking-th border px-4 py-2 text-left">Order ID</th>
+                      <th class="view-booking-th border px-4 py-2 text-left">User</th>
+                      <th class="view-booking-th border px-4 py-2 text-left">Amount</th>
+                      <th class="view-booking-th border px-4 py-2 text-left">Status</th>
+                      <th class="view-booking-th border px-4 py-2 text-left">Created At</th>
+                      <th class="view-booking-th border px-4 py-2 text-left">Product Details</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for order in orders %}
+                  <tr class="view-booking-row hover:bg-gray-50">
+                      <td class="view-booking-td border px-4 py-2">{{ order.id }}</td>
+                      <td class="view-booking-td border px-4 py-2">{{ order.user.username }}</td>
+                      <td class="view-booking-td border px-4 py-2">{{ order.amount }}</td>
+                      <td class="view-booking-td border px-4 py-2">{{ order.status }}</td>
+                      <td class="view-booking-td border px-4 py-2">{{ order.created_at }}</td>
+                      <td class="view-booking-td border px-4 py-2">
+                          <div class="flex items-center">
+                              <div class="mr-4 w-16 h-16 flex-shrink-0">
+                                  {% if order.product.image %}
+                                      <img src="{{ order.product.image.url }}" alt="{{ order.product.name }}" class="w-full h-full object-cover rounded">
+                                  {% else %}
+                                      <div class="w-full h-full bg-gray-200 rounded flex items-center justify-center">
+                                          <span class="text-xs text-gray-500">No image</span>
+                                      </div>
+                                  {% endif %}
+                              </div>
+                              <div class="product-details">
+                                  <h4 class="font-medium">{{ order.product.name }}</h4>
+                                  <p class="text-xs text-gray-600">{{ order.product.description|truncatechars:50 }}</p>
+                                  {% if order.product.category %}
+                                      <span class="text-xs bg-gray-100 px-2 py-1 rounded mt-1 inline-block">{{ order.product.category }}</span>
+                                  {% endif %}
+                              </div>
+                          </div>
+                      </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="6" class="view-booking-empty text-center px-4 py-6 text-gray-500">No orders found.</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  
+      <div class="view-booking-pagination mt-6 flex justify-between items-center">
+          <span class="text-sm text-gray-600">Page {{ orders.number }} of {{ orders.paginator.num_pages }}</span>
+          <div class="view-booking-pagination-controls flex gap-2">
+              {% if orders.has_previous %}
+                  <a href="?page={{ orders.previous_page_number }}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}"
+                     class="view-booking-btn border px-3 py-1 rounded hover:bg-gray-100">Previous</a>
+              {% endif %}
+              {% if orders.has_next %}
+                  <a href="?page={{ orders.next_page_number }}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}"
+                     class="view-booking-btn border px-3 py-1 rounded hover:bg-gray-100">Next</a>
+              {% endif %}
+          </div>
+      </div>
+  </div> 
+    
+    
+    
+    
+    
+    
+
+
+        
+
+    <!-- Footer -->
+<footer class="bg-light mt-5 py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-0">© 2025 LOFT Admin Panel. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-decoration-none text-muted me-3">Terms of Service</a>
+                <a href="#" class="text-decoration-none text-muted">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap 5 JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% block banner %}
+{% include 'user/account_register.html' %}
+
+{% endblock banner %}
+{% block content %}
+
+{% block registerscript %}
+<script>
+  // Selecting the buttons
+  const signUpBtn = document.querySelector("#auth-sign-up-btn");
+  const signInBtn = document.querySelector("#auth-back-to-signin"); // Make sure to add this ID in your HTML
+  const formContainer = document.querySelector(".auth-form-container");
+
+  // When "Sign Up" button is clicked
+  signUpBtn.addEventListener("click", () => {
+    formContainer.classList.add("auth-signup-mode"); // Fixed class name
+  });
+
+  // When "Back to Sign In" button is clicked
+  signInBtn.addEventListener("click", () => {
+    formContainer.classList.remove("auth-signup-mode"); // Fixed class name
+  });
+
+  //================================================================================================
+
+
+</script>
+
+
+{% endblock registerscript %}
+
+{% endblock content %}

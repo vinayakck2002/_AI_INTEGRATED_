@@ -1,0 +1,44 @@
+{% extends 'user/blank_layout.html' %}
+{% block banner %}
+{% endblock banner %}
+{% block content %}
+<div class="container my-5 text-center">
+    <h2>Processing Payment</h2>
+    <p>Please wait while we redirect you to the payment gateway...</p>
+    
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<form method="post" id="razorpayForm">
+    {% csrf_token %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                key: "{{ razorpay_key }}",
+                amount: "{{ order.amount }}" * 100,
+                currency: "INR",
+                name: "{{ product.name }}",   
+                description: "Order #{{ order.provider_order_id }}",
+                image: "{{ product.image.url }}",
+                order_id: "{{ order.provider_order_id }}",
+                callback_url: "{{ callback_url }}",
+                redirect: true,
+                prefill: {
+                    name: "{{ address.name }}",
+                    contact: "{{ address.phone }}"
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+            var rzpl = new Razorpay(options);
+            setTimeout(function() {
+                rzpl.open();
+            }, 1000);
+        });
+    </script>
+</form>
+{% endblock %}

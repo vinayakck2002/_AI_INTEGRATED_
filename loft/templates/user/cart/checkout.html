@@ -1,0 +1,127 @@
+{% extends 'user/blank_layout.html' %}
+
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+<div class="container cartpro-checkout-container">
+    <h2 class="title">Checkout</h2>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %} 
+    <div class="cartpro-row">
+        <div class="col-md-8">
+            <div class="cartpro-card">
+                <div class="cartpro-card-header">
+                    <h4 class="cartpro-card-title">Order Summary</h4>
+                </div>
+                <div class="cartpro-card-body">
+                    <table class="cartpro-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Size</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td data-label="Product">
+                                    <div class="cartpro-product-cell">
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cartpro-product-image">
+                                        <span class="cartpro-product-name">{{ item.product.name }}</span>
+                                    </div>
+                                </td>
+                                <td data-label="Size">
+                                    {% if item.product_size %}
+                                        {{ item.product_size.size }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td data-label="Price" class="cartpro-price">₹{{ item.product.offerprice }}</td>
+                                <td data-label="Quantity">{{ item.quantity }}</td>
+                                <td data-label="Total" class="cartpro-total-price">₹{{ item.totalprice }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4"><strong>Total Amount</strong></td>
+                                <td class="cartpro-grand-total"><strong>₹{{ total_amount }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="cartpro-card">
+                <div class="cartpro-card-header">
+                    <h4 class="cartpro-card-title">Shipping Address</h4>
+                </div>
+                <div class="cartpro-card-body">
+                    <form method="post" action="{% url 'checkout_cart' %}">
+                        {% csrf_token %}
+                        
+                        {% if addresses %}
+                            <div class="cartpro-address-list">
+                                {% for address in addresses %}
+                                <label for="address{{ address.id }}" class="cartpro-address-item {% if forloop.first %}selected{% endif %}">
+                                    <input class="cartpro-address-radio" type="radio" name="address_id" id="address{{ address.id }}" value="{{ address.id }}" {% if forloop.first %}checked{% endif %} required>
+                                    <span class="cartpro-address-radio-mark"></span>
+                                    <div class="cartpro-address-content">
+                                        <span class="cartpro-address-name">{{ address.name }}</span>
+                                        <p class="cartpro-address-details">{{ address.address }}</p>
+                                        <span class="cartpro-address-phone">{{ address.phone }}</span>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="cartpro-buttons-container">
+                                <a href="{% url 'cart' %}" class="cartpro-btn cartpro-btn-secondary">Back to Cart</a>
+                                <button type="submit" class="cartpro-btn cartpro-btn-primary">Proceed to Payment</button>
+                            </div>
+                        {% else %}
+                            <div class="cartpro-alert">
+                                <p>You don't have any saved addresses. Please add an address to continue.</p>
+                                <a href="{% url 'add_address' %}" class="cartpro-btn cartpro-btn-warning">Add New Address</a>
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Make entire address card clickable
+    const addressItems = document.querySelectorAll('.cartpro-address-item');
+    addressItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove selected class from all items
+            addressItems.forEach(addr => addr.classList.remove('selected'));
+            // Add selected class to clicked item
+            this.classList.add('selected');
+            // Check the radio button
+            const radio = this.querySelector('.cartpro-address-radio');
+            radio.checked = true;
+        });
+    });
+});
+</script>
+{% endblock %}

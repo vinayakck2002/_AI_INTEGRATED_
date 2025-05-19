@@ -1,0 +1,233 @@
+{% load static %}
+{% if messages %}
+<div id="auth-alert-container">
+  {% for message in messages %}
+  <div class="auth-alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+<!-- {% endif %} -->
+<div class="auth-container">
+  <div class="auth-form-container">
+      <div class="auth-forms-wrapper">
+        <div class="auth-forms-box">
+        <!-- Sign In Form -->
+        <form class="auth-signin-form" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <h2>Sign In</h2>
+          <div class="auth-input-field">
+            <i>👤</i>
+            <input type="text" name="username" placeholder="Username" required />
+          </div>
+          <div class="auth-input-field">
+            <i>🔒</i>
+            <input type="password" name="password" placeholder="Password" required />
+          </div>
+          <input type="submit" name="login" value="Login" class="auth-btn solid" />
+          <p class="auth-social-text">Or Sign in with social platforms</p>
+          <p class="auth-social-text-forgot"><a href="{% url 'forgotpassword' %}">forgotpassword</a></p>
+          <div class="auth-social-media">
+            <a href="#" class="auth-social-icon">𝕏</a>
+            <a href="#" class="auth-social-icon">ƒ</a>
+            <a href="#" class="auth-social-icon">𝔾</a>
+            <a href="#" class="auth-social-icon">𝕀</a>
+          </div>
+        </form>
+
+        <!-- Sign Up Form -->
+<!-- Sign Up Form -->
+<form class="auth-signup-form" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h2>Sign Up</h2>
+  <div class="auth-input-field">
+    <i>👤</i>
+    <input type="text" name="username" placeholder="Username" required />
+  </div>
+  <div class="auth-input-field">
+    <i>✉️</i>
+    <input type="email" name="email" placeholder="Email" required />
+  </div>
+  <div class="auth-input-field">
+    <i><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="27" height="27" viewBox="0 0 48 48">
+        <linearGradient id="jv689zNUBazMNK6AOyXtga_wFfu6zXx15Yk_gr1" x1="6" x2="42" y1="41" y2="41"
+          gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#c8d3de"></stop>
+          <stop offset="1" stop-color="#c8d3de"></stop>
+        </linearGradient>
+        <path fill="url(#jv689zNUBazMNK6AOyXtga_wFfu6zXx15Yk_gr1)"
+          d="M42,39H6v2c0,1.105,0.895,2,2,2h32c1.105,0,2-0.895,2-2V39z"></path>
+        <linearGradient id="jv689zNUBazMNK6AOyXtgb_wFfu6zXx15Yk_gr2" x1="14.095" x2="31.385" y1="10.338"
+          y2="43.787" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#fcfcfc"></stop>
+          <stop offset=".495" stop-color="#f4f4f4"></stop>
+          <stop offset=".946" stop-color="#e8e8e8"></stop>
+          <stop offset="1" stop-color="#e8e8e8"></stop>
+        </linearGradient>
+        <path fill="url(#jv689zNUBazMNK6AOyXtgb_wFfu6zXx15Yk_gr2)" d="M42,39H6V20L24,3l18,17V39z"></path>
+        <path fill="#de490d" d="M13,25h10c0.552,0,1,0.448,1,1v17H12V26C12,25.448,12.448,25,13,25z"></path>
+        <path
+          d="M24,4c-0.474,0-0.948,0.168-1.326,0.503l-5.359,4.811L6,20v5.39L24,9.428L42,25.39V20L30.685,9.314	l-5.359-4.811C24.948,4.168,24.474,4,24,4z"
+          opacity=".05"></path>
+        <path
+          d="M24,3c-0.474,0-0.948,0.167-1.326,0.5l-5.359,4.784L6,18.909v5.359L24,8.397l18,15.871v-5.359	L30.685,8.284L25.326,3.5C24.948,3.167,24.474,3,24,3z"
+          opacity=".07"></path>
+        <linearGradient id="jv689zNUBazMNK6AOyXtgc_wFfu6zXx15Yk_gr3" x1="24" x2="24" y1="1.684" y2="23.696"
+          gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#d43a02"></stop>
+          <stop offset="1" stop-color="#b9360c"></stop>
+        </linearGradient>
+        <path fill="url(#jv689zNUBazMNK6AOyXtgc_wFfu6zXx15Yk_gr3)"
+          d="M44.495,19.507L25.326,2.503C24.948,2.168,24.474,2,24,2s-0.948,0.168-1.326,0.503	L3.505,19.507c-0.42,0.374-0.449,1.02-0.064,1.43l1.636,1.745c0.369,0.394,0.984,0.424,1.39,0.067L24,7.428L41.533,22.75	c0.405,0.356,1.021,0.327,1.39-0.067l1.636-1.745C44.944,20.527,44.915,19.881,44.495,19.507z">
+        </path>
+        <linearGradient id="jv689zNUBazMNK6AOyXtgd_wFfu6zXx15Yk_gr4" x1="28.05" x2="35.614" y1="25.05"
+          y2="32.614" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#33bef0"></stop>
+          <stop offset="1" stop-color="#0a85d9"></stop>
+        </linearGradient>
+        <path fill="url(#jv689zNUBazMNK6AOyXtgd_wFfu6zXx15Yk_gr4)"
+          d="M29,25h6c0.552,0,1,0.448,1,1v6c0,0.552-0.448,1-1,1h-6c-0.552,0-1-0.448-1-1v-6	C28,25.448,28.448,25,29,25z">
+        </path>
+      </svg></i>
+    <input type="text" name="address" placeholder="building/house,locality,city,state,PIN code" required />
+  </div>
+
+  <div class="auth-input-field">
+    <i>🔒</i>
+    <input type="password" name="password" placeholder="Password" required />
+  </div>
+  <div class="auth-input-field">
+    <i>🔒</i>
+    <input type="password" name="comfirm_password" placeholder="Comfirm password" required />
+  </div>
+  <input type="submit" name="register" value="Sign Up" class="auth-btn solid" />
+</form>
+      </div>
+    </div>
+
+    <div class="auth-panels-container">
+      <!-- Left Panel -->
+      <div class="auth-panel auth-left-panel">
+        <div class="auth-content">
+          <h3>New here?</h3>
+          <p>Join our community and discover amazing features and benefits!</p>
+          <button class="auth-btn auth-transparent" id="auth-sign-up-btn">Sign Up</button>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="auth-panel auth-right-panel">
+        <div class="auth-content">
+          <h3>Already have an account?</h3>
+          <p>Sign in and explore all our features!</p>
+          <button class="auth-btn auth-transparent" id="auth-back-to-signin">Sign In</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Auto-hide alert messages after 3 seconds
+  window.onload = function () {
+    const alertContainer = document.getElementById('alert-container');
+    if (alertContainer) {
+      setTimeout(() => {
+        alertContainer.style.display = 'none';
+      }, 3000);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+  // Create a function to show alerts
+  function showAlert(message, type) {
+    // Create alert container if it doesn't exist
+    let alertContainer = document.getElementById('auth-alert-container');
+    if (!alertContainer) {
+      alertContainer = document.createElement('div');
+      alertContainer.id = 'auth-alert-container';
+      document.querySelector('.auth-container').prepend(alertContainer);
+    }
+    
+    // Create the alert element
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `auth-alert alert-${type}`;
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.textContent = message;
+    
+    // Add to container
+    alertContainer.appendChild(alertDiv);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      alertDiv.remove();
+      if (alertContainer.children.length === 0) {
+        alertContainer.style.display = 'none';
+      }
+    }, 3000);
+  }
+  
+  // Get form elements
+  const signupForm = document.querySelector('.auth-signup-form');
+  const passwordField = signupForm.querySelector('input[name="password"]');
+  const confirmField = signupForm.querySelector('input[name="comfirm_password"]');
+  
+  // Add validation on form submission
+  signupForm.addEventListener('submit', function(e) {
+    const password = passwordField.value;
+    const confirmPassword = confirmField.value;
+    let isValid = true;
+    
+    // Remove any existing alerts first
+    const alertContainer = document.getElementById('auth-alert-container');
+    if (alertContainer) {
+      alertContainer.innerHTML = '';
+    }
+    
+    // Validate length
+    if (password.length < 8) {
+      showAlert("Password must be at least 8 characters long.", "error");
+      isValid = false;
+    }
+    
+    // Validate digit
+    if (!/\d/.test(password)) {
+      showAlert("Password must contain at least one number.", "error");
+      isValid = false;
+    }
+    
+    // Validate uppercase
+    if (!/[A-Z]/.test(password)) {
+      showAlert("Password must contain at least one uppercase letter.", "error");
+      isValid = false;
+    }
+    
+    // Validate lowercase
+    if (!/[a-z]/.test(password)) {
+      showAlert("Password must contain at least one lowercase letter.", "error");
+      isValid = false;
+    }
+    
+    // Validate special character
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      showAlert("Password must contain at least one special character.", "error");
+      isValid = false;
+    }
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      showAlert("Passwords do not match.", "error");
+      isValid = false;
+    }
+    
+    // Prevent form submission if validation fails
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+
+<!-- Bootstrap for better alert styling -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">

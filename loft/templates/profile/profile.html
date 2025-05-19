@@ -1,0 +1,91 @@
+<!-- templates/profile.html (modified) -->
+{% extends 'user/blank_layout.html' %}
+
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+<div class="myprofile-container container">
+    <div class="myprofile-row row">
+        <div class="myprofile-col-12 col-12">
+            <div class="myprofile-card card">
+                <div class="myprofile-card-header card-header bg-primary text-white">
+                    <h3 class="myprofile-title">My Profile</h3>
+                </div>
+                <div class="myprofile-card-body card-body">
+                    <h4 class="myprofile-welcome">Welcome, {{ request.user.username }}</h4>
+
+                    <div class="myprofile-username-section mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="myprofile-username"><strong>Username:</strong> {{ request.user.username }}</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <a href="{% url 'edit_username' %}" class="myprofile-edit-username-btn btn btn-primary btn-sm">
+                                    <i class="myprofile-edit-icon fa fa-edit"></i> Edit Username
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- User Email Information -->
+                    <div class="myprofile-email-section mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p class="myprofile-email"><strong>Email:</strong> {{ request.user.email }}</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <a href="{% url 'edit_email' %}" class="myprofile-edit-email-btn btn btn-primary btn-sm">
+                                    <i class="myprofile-edit-icon fa fa-edit"></i> Edit Email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="myprofile-divider">
+                    
+                    <h5 class="myprofile-section-title">My Addresses</h5>
+                    
+                    <div class="myprofile-button-container mb-3">
+                        <a href="{% url 'add_address' %}" class="myprofile-add-btn btn btn-success">
+                            <i class="myprofile-icon fa fa-plus"></i> Add New Address
+                        </a>
+                    </div>
+                    
+                    {% if addresses %}
+                        <div class="myprofile-addresses-container row">
+                            {% for address in addresses %}
+                                <div class="myprofile-address-col col-md-6 mb-4">
+                                    <div class="myprofile-address-card card">
+                                        <div class="myprofile-address-header card-header">
+                                            <h5 class="myprofile-address-name">{{ address.name }}</h5>
+                                        </div>
+                                        <div class="myprofile-address-body card-body">
+                                            <p class="myprofile-address-text"><strong>Address:</strong><br>{{ address.address }}</p>
+                                            <p class="myprofile-phone-text"><strong>Phone:</strong> {{ address.phone }}</p>
+                                            
+                                            <div class="myprofile-actions-group btn-group">
+                                                <a href="{% url 'edit_address' address.id %}" class="myprofile-edit-btn btn btn-primary btn-sm">
+                                                    <i class="myprofile-edit-icon fa fa-edit"></i> Edit
+                                                </a>
+                                                <a href="{% url 'delete_address' address.id %}" class="myprofile-delete-btn btn btn-danger btn-sm">
+                                                    <i class="myprofile-delete-icon fa fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="myprofile-empty-alert alert alert-info">
+                            You don't have any addresses yet. Click "Add New Address" to create one.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

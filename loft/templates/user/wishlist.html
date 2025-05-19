@@ -1,0 +1,52 @@
+{% extends 'user/blank_layout.html' %}
+{% load static %}
+
+{% block banner %}
+<main class="container">
+    <h1 class="page-title">My Wishlist</h1>
+    
+    <!-- Messages Section -->
+    <div class="alerts">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <!-- Wishlist Content -->
+    <div class="wishlist-container">
+        {% if wishlist_items %}
+            <div class="wishlist-items">
+                {% for item in wishlist_items %}
+                    <div class="wishlist-item">
+                        <div class="wishlist-item-image">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        </div>
+                        <div class="wishlist-item-info">
+                            <h3 class="wishlist-item-name">{{ item.product.name }}</h3>
+                            <div class="wishlist-item-price">${{ item.product.offerprice }}</div>
+                            <div class="wishlist-item-actions">
+                                <a href="{% url 'product_detail' pk=item.product.id %}" class="btn btn-secondary">View Product</a>
+                                <a href="{% url 'remove_from_wishlist' item.product.id %}?next=wishlist" class="btn btn-outline">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-wishlist">
+                <p>Your wishlist is empty.</p>
+                <a href="#" class="btn btn-primary">Continue Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+
+
+
+{% endblock banner %}
+

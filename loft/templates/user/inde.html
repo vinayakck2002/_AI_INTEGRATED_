@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script>
+  
+</script>
+<body>
+  <!-- Gender category filter section -->
+<div class="gender-filter-container">
+  <h3 class="filter-heading">Filter by Gender</h3>
+  <div class="gender-buttons">
+      <a href="#" class="gender-btn {% if request.GET.gender == 'M' %}active{% endif %}">Men</a>
+      <a href="#" class="gender-btn {% if request.GET.gender == 'W' %}active{% endif %}">Women</a>
+      <a href="#" class="gender-btn {% if request.GET.gender == 'K' %}active{% endif %}">Kids</a>
+      <a href="#" class="gender-btn {% if not request.GET.gender %}active{% endif %}">All</a>
+  </div>
+</div>
+
+<!-- Optional: Products grid that works with the filter -->
+<div class="products-grid">
+  {% for product in products %}
+  <div class="product-card">
+      <div class="product-image">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% if product.offerprice < product.price %}
+          <div class="product-badge">Sale</div>
+          {% endif %}
+      </div>
+      <div class="product-info">
+          <h4 class="product-name">{{ product.name }}</h4>
+          <p class="product-category">
+              {{ product.shoe_category.name }} | 
+              {% if product.gender_category == 'M' %}Men
+              {% elif product.gender_category == 'W' %}Women
+              {% elif product.gender_category == 'K' %}Kids
+              {% else %}Unisex{% endif %}
+          </p>
+          <div class="product-price">
+              {% if product.offerprice < product.price %}
+              <span class="original-price">${{ product.price }}</span>
+              <span class="offer-price">${{ product.offerprice }}</span>
+              {% else %}
+              <span class="regular-price">${{ product.price }}</span>
+              {% endif %}
+          </div>
+      </div>
+      <div class="product-actions">
+          <a href="{% url 'product_detail' product.id %}" class="btn-view">View Details</a>
+          <a href="{% url 'add_to_cart' product.id %}" class="btn-cart">Add to Cart</a>
+      </div>
+  </div>
+  {% empty %}
+  <div class="no-products">
+      <p>No products found matching your criteria.</p>
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>

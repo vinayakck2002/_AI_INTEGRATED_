@@ -1,0 +1,80 @@
+{% extends 'user/blank_layout.html' %}
+{% block banner %}
+{% endblock banner %}
+{% block content %}
+<div class="container select-address-container py-5">
+    <h2 class="mb-4 text-center">Select Delivery Address</h2>
+
+    <!-- Product Details Card -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Product Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-4 text-center">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                </div>
+                <div class="col-12 col-md-8">
+                    <h4>{{ product.name }}</h4>
+                    <p><strong>Price:</strong> ₹{{ product.offerprice }}</p>
+                    <p><strong>Quantity:</strong> {{ quantity }}</p>
+                    {% if selected_size %}
+                        <p><strong>Size:</strong> {{ selected_size }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Selection Form -->
+    <form method="post" class="select-address-form" action="{% url 'process_payment' product.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="{{ quantity }}">
+        {% if selected_size %}
+            <input type="hidden" name="selected_size" value="{{ selected_size }}">
+        {% endif %}
+
+        <!-- Address Selection Card -->
+        <div class="card select-address-card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                <h5 class="mb-0">Your Addresses</h5>
+                <a href="{% url 'add_address' %}" class="btn btn-sm btn-primary">Add New Address</a>
+            </div>
+            <div class="card-body">
+                {% if addresses %}
+                    <div class="row g-3 justify-content-center">
+                        {% for address in addresses %}
+                            <div class="col-12 col-md-6 col-lg-4 select-address-item">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="address_id" 
+                                                   id="address{{ address.id }}" value="{{ address.id }}" 
+                                                   {% if forloop.first %}checked{% endif %}>
+                                            <label class="form-check-label" for="address{{ address.id }}">
+                                                <strong>{{ address.name }}</strong><br>
+                                                {{ address.address }}<br>
+                                                Phone: {{ address.phone }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center">You don't have any saved addresses. Please add a new address.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg px-5" {% if not addresses %}disabled{% endif %}>
+                Proceed to Payment
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

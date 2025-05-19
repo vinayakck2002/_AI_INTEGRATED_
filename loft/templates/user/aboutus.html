@@ -1,0 +1,118 @@
+{% extends 'user/blank_layout.html' %}
+{% load static %}
+{% block banner %}
+{% endblock banner %}
+{% block content %}
+<div class="aboutContainer">
+    <h2 class="title" >About us</h2>
+    <div class="aboutLogoContainer">
+        <div class="aboutLogo"><img src="{% static 'image/LOFT.png' %}" alt="logo"></div>
+    </div>
+    
+    <section class="aboutHero">
+        <div class="aboutHeroContent">
+            <h1 class="aboutHeroTitle">Our Legacy</h1>
+            <div class="aboutDivider"></div>
+            <p class="aboutHeroSubtitle">A Decade of Luxury Footwear</p>
+        </div>
+    </section>
+    
+    <section class="aboutStory">
+        <div class="aboutStoryContent">
+            <h2 class="title">The Loft Collections Journey</h2>
+            <p class="aboutStoryText">Founded in 2015 by visionary designer Elizabeth Laurent, Loft Collections was born from a singular mission: to create footwear that epitomizes the perfect balance between timeless elegance and contemporary design. What began in a small Parisian atelier has blossomed into a globally recognized luxury brand, celebrated for its exceptional craftsmanship and distinctive aesthetic.</p>
+            
+            <p class="aboutStoryText">For a decade, we have remained committed to sourcing the finest materials from renowned tanneries across Italy and Spain. Each pair of Loft Collections shoes is meticulously crafted by master artisans who bring generations of expertise to their work. Our dedication to quality is unwavering—we believe that luxury is not merely about appearance, but about the integrity that lies beneath the surface.</p>
+            
+            <p class="aboutStoryText">As we celebrate our tenth anniversary, we continue to push the boundaries of design while honoring the time-tested techniques that have defined our brand. Our collections bridge the gap between heritage craftsmanship and modern innovation, creating footwear that transcends trends and becomes an essential element of personal style.</p>
+            
+            <div class="aboutStorySignature">Elizabeth Laurent</div>
+        </div>
+        <div class="aboutStoryImage"><img class="aboutimage" src="{% static 'image/aboutusimage.jpg' %}" alt=""></div>
+    </section>
+    
+    <section class="aboutMilestones">
+        <div class="aboutMilestonesContent">
+            <h2 class="title">A Decade of Excellence</h2>
+            <div class="aboutMilestonesList">
+                <div class="aboutMilestone">
+                    <div class="aboutMilestoneNumber">10</div>
+                    <div class="aboutMilestoneText">Years of Luxury Craftsmanship</div>
+                </div>
+                <div class="aboutMilestone">
+                    <div class="aboutMilestoneNumber">75+</div>
+                    <div class="aboutMilestoneText">Exclusive Boutiques Worldwide</div>
+                </div>
+                <div class="aboutMilestone">
+                    <div class="aboutMilestoneNumber">150K</div>
+                    <div class="aboutMilestoneText">Discerning Clients</div>
+                </div>
+                <div class="aboutMilestone">
+                    <div class="aboutMilestoneNumber">30</div>
+                    <div class="aboutMilestoneText">International Design Awards</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="aboutValues">
+        <h2 class="title">Our Philosophy</h2>
+        <div class="aboutValuesGrid">
+            <div class="aboutValueCard">
+                <div class="aboutValueCardAccent"></div>
+                <div class="aboutValueIcon">✦</div>
+                <h3 class="aboutValueTitle">Artisanal Excellence</h3>
+                <p class="aboutValueDescription">We preserve the heritage of traditional shoemaking while embracing innovative techniques to create footwear of exceptional quality. Each piece undergoes rigorous quality control to ensure perfection in every stitch.</p>
+            </div>
+            <div class="aboutValueCard">
+                <div class="aboutValueCardAccent"></div>
+                <div class="aboutValueIcon">✦</div>
+                <h3 class="aboutValueTitle">Ethical Luxury</h3>
+                <p class="aboutValueDescription">Our commitment to responsible production means selecting partners who share our values. We prioritize sustainable practices and ethical working conditions throughout our supply chain without compromising on quality.</p>
+            </div>
+            <div class="aboutValueCard">
+                <div class="aboutValueCardAccent"></div>
+                <div class="aboutValueIcon">✦</div>
+                <h3 class="aboutValueTitle">Timeless Design</h3>
+                <p class="aboutValueDescription">We create designs that transcend fleeting trends, focusing on elegant silhouettes and refined details that remain relevant season after season. Our collections are built to become cherished elements of your wardrobe.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="aboutTeam">
+        <h2 class="title">The Visionaries</h2>
+        <div class="aboutTeamGrid">
+            <div class="aboutTeamMember">
+                <div class="aboutTeamMemberImage"><img class="aboutTeamMemberImage" src="{% static 'image/dir.jpg' %}" alt="image"></div>
+                <h3 class="aboutTeamMemberName"> Vijay</h3>
+                <p class="aboutTeamMemberTitle">Founder & Creative Director</p>
+                <p class="aboutTeamMemberBio">With over 25 years in luxury fashion, Elizabeth brings unparalleled vision and expertise to Loft Collections, ensuring each design embodies the brand's commitment to excellence.</p>
+            </div>
+            <div class="aboutTeamMember">
+                <div class="aboutTeamMemberImage"><img class="aboutTeamMemberImage" src="{% static 'image/gandi-.png' %}" alt="image"></div>
+                <h3 class="aboutTeamMemberName">Gandhi</h3>
+                <p class="aboutTeamMemberTitle">Master Craftsman</p>
+                <p class="aboutTeamMemberBio">Gandhi leads our artisanal workshop with techniques passed down through five generations of Italian shoemakers, perfecting every curve and contour of our signature styles.</p>
+            </div>
+            <div class="aboutTeamMember">
+                <div class="aboutTeamMemberImage"><img class="aboutTeamMemberImage" src="{% static 'image/sarkar.png' %}" alt="image"></div>
+                <h3 class="aboutTeamMemberName">Sundar Ramaswamy</h3>
+                <p class="aboutTeamMemberTitle">Design Director</p>
+                <p class="aboutTeamMemberBio">Sundar brings contemporary elegance to our collections, balancing innovation with timeless principles to create footwear that resonates with the modern luxury clientele.</p>
+            </div>
+            <div class="aboutTeamMember">
+                <div class="aboutTeamMemberImage"><img class="aboutTeamMemberImage" src="{% static 'image/vijay.png' %}" alt="image"></div>
+                <h3 class="aboutTeamMemberName">Parthiban </h3>
+                <p class="aboutTeamMemberTitle">Materials Specialist</p>
+                <p class="aboutTeamMemberBio">Parthiban  travels the world to source the finest leathers and materials, building relationships with premium suppliers to ensure uncompromising quality in every component.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="aboutCta">
+        <h2 class="aboutCtaTitle">Experience the Loft Collections Difference</h2>
+        <p class="aboutCtaText">We invite you to explore our curated collections and discover the exceptional craftsmanship that has defined our first decade of luxury shoemaking. Each pair tells a story of passion, precision, and uncompromising quality.</p>
+        <a href="#" class="aboutCtaButton">View Collections</a>
+    </section>
+</div>
+{% endblock content %}

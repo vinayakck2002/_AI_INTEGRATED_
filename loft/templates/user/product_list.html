@@ -1,0 +1,59 @@
+{% load static %}
+{% load chunks %}
+
+
+<!-- Gender filter links -->
+ 
+<div class="small-container nav-productlist">
+    <ul>
+        <li><a href="{% url 'product_list_by_gender' gender_id=1 %}">Men</a></li>
+        <li><a href="{% url 'product_list_by_gender' gender_id=2 %}">Women</a></li>
+        <li><a href="{% url 'product_list_by_gender' gender_id=3 %}">Kids</a></li>
+    </ul>
+</div>
+
+<!-- Display products -->
+<div class="small-container productlist-container">
+    <h2 class="text-center allproducthead title">Our Products</h2>
+
+    {% for product_chunks in products|chunks:4 %}
+    <div class="row allproductimage">
+        {% for product in product_chunks %}
+        <div class="col-md-3 col-sm-6 wish">
+            <div class="product-grid">
+                <div class="product-image">
+                    <a href="{% url 'product_detail' product.id %}" class="image">
+                        {% if product.image and product.image.url %}
+                        <img class="pic-1" src="{{ product.image.url }}">
+                        {% endif %}
+                        {% if product.image1 and product.image1.url %}
+                        <img class="pic-2" src="{{ product.image1.url }}">
+                        {% endif %}
+                    </a>
+
+                </div>
+                <h6 class="mt-3">{{ product.name }}</h6>
+                <h6 class="mt-2"><i class='bx bx-rupee'></i>{{ product.offerprice }}</h6>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-4 mb-5">
+    <div class="pagination">
+        {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}" class="page-link"><span>&laquo;</span></a>
+        {% endif %}
+        
+        {% for i in products.paginator.page_range %}
+        <a href="?page={{ i }}" class="page-link {% if products.number == i %}active{% endif %}">{{ i }}</a>
+        {% endfor %}
+        
+        {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}" class="page-link"><span>&raquo;</span></a>
+        {% endif %}
+    </div>
+</div>
