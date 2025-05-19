@@ -131,9 +131,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'loft5661@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'kcow zwin witq ocxn'  # Your Gmail password or App password
+EMAIL_HOST_PASSWORD = ''  # Your Gmail password or App password
 DEFAULT_FROM_EMAIL = 'loft5661@gmail.com'
 
 
-RAZORPAY_KEY_ID = 'rzp_test_mc5qWDo8Ayqu6F'
-RAZORPAY_KEY_SECRET = 'tn8hhrYGhlRUV8kyioft8QUh'
+RAZORPAY_KEY_ID = ''
+RAZORPAY_KEY_SECRET = ''
